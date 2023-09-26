@@ -1,2 +1,2 @@
 # Algoritmos e Estruturas de Dados
-Repositório dedicado ao armazenamento de códigos de AED 1 (matéria do segundo semestre de Engenharia de Computação)
+Repositório dedicado ao armazenamento de códigos da matéria AED 1 em linguagem C do segundo semestre da faculdade.
