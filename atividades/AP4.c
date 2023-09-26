@@ -39,8 +39,12 @@ RPN pop(PilhaD *pilha) {
 }
 
 void imprimePilha(PilhaD *pilha) {
-    RPN *p = pilha->topo;
-    printf("%d\n", p->elemento);
+    RPN p;
+    p = pop(pilha);
+    if(pilhaVazia(pilha))
+        printf("%i\n", p.elemento);
+    else
+        printf("Invalid Expression");
 }
 
 int main() {
