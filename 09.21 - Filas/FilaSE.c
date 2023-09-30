@@ -22,7 +22,7 @@ typedef struct {
     int qtd; //quantidade de elementos da fila
 }TipoFilaSE;
 
-void inicializaFileSE(TipoFilaSE *fila) {
+void inicializaFilaSE(TipoFilaSE *fila) {
     fila->inicio = 0;
     fila->fim = 0;
     fila->qtd = 0;

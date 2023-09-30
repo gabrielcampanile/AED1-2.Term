@@ -52,3 +52,14 @@ void remover(TipoFilaD *fila) {
         fila->fim = NULL;
     }
 }
+
+void destroy(TipoItem *fila) {
+    if(fila->prox != NULL) {
+        destroy(fila->prox);
+    }
+    free(fila);
+}
+
+int main() {
+
+}
