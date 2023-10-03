@@ -54,7 +54,6 @@ void remover(TipoFilaD *fila) {
     }
 }
 
-<<<<<<< HEAD
 void exibirFila(TipoFilaD *fila) {
     TipoItem *atual = fila->inicio;
     
@@ -112,15 +111,3 @@ int main() {
 
     return 0;
 }
-=======
-void destroy(TipoItem *fila) {
-    if(fila->prox != NULL) {
-        destroy(fila->prox);
-    }
-    free(fila);
-}
-
-int main() {
-
-}
->>>>>>> 0926f1ff2500351c4bbfe729cfe4b3cd52b2613e
