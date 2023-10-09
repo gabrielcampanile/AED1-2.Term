@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#define MAX 1000
+#define MAX 5
 
 typedef struct
 {
@@ -23,7 +23,7 @@ void inicializaLLSE(ListaLinearSE *lista)
 void imprimeLLSE(ListaLinearSE *lista)
 {
     int i = 0;
-    for (i = 0; i <= lista->ultimo; i++)
+    for (i = 0; i < lista->ultimo; i++)
         printf("%d %s\n", lista->itens[i].chave, lista->itens[i].nome);
 }
 
@@ -48,7 +48,7 @@ int main()
 
     inicializaLLSE(&lista);
 
-    printf("Quantos itens você deseja adicionar? ");
+    printf("Quantos itens voce deseja adicionar? ");
     scanf("%d", &n);
 
     for (i = 0; i < n; i++)
