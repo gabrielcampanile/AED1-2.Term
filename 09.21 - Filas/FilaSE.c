@@ -41,14 +41,46 @@ int filaCheia(TipoFilaSE *fila) {
     // return((fila->fim+1) % fila->tam == fila->inicio)
 }
 
-int inserirFilaSE(TipoFilaSE *fila, TipoItem novo) {}
+int inserirFilaSE(TipoFilaSE *fila, TipoItem novo) {
+    if(filaCheia(fila)) return 0;
 
-TipoItem removerFilaSE(TipoFilaSE *fila) {}
+    fila->vet[fila->fim] = novo;
+    fila->fim = (fila->fim+1) % fila->tam;
+    fila->qtd++;
+
+    return 1;
+}
+
+TipoItem removerFilaSE(TipoFilaSE *fila) {
+    TipoItem itemRemovido;
+
+    if(filaVazia(fila)) {
+        itemRemovido.chave = -1;
+        return itemRemovido;
+    }
+
+    itemRemovido = fila->vet[fila->inicio];
+    fila->inicio = (fila->inicio +1) % fila->tam;
+    fila->qtd--;
+
+    return itemRemovido;
+}
+
+void exibirFilaSE(TipoFilaSE *fila) {
+    if(filaVazia(fila)) {
+        printf("A fila esta vazia.\n");
+        return;
+    }
+    
+    printf("Elementos na fila:\n");
+    for(int i= fila->inicio; i < fila->fim; i++)
+        printf("%d - %s\n", fila->vet[i].chave, fila->vet[i].nome);
+}
 
 int main() {
     TipoFilaSE fila;
     TipoItem item;
-    int i, N, v, op;
+    int i, N, op;
 
     scanf("%d", &N);
     inicializaFileSE(&fila);
@@ -65,5 +97,7 @@ int main() {
                 exit(1);
         }
     }
+    exibirFilaSE(&fila);
+
     return 0;
 }

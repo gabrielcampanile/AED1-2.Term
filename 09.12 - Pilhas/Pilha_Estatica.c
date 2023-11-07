@@ -33,7 +33,7 @@ int pilhaCheia(TipoPilha *pilha) {
     return 0;
 }
 
-int push(TipoPilha *pilha, TipoItem *novo) {
+int push(TipoPilha *pilha, TipoItem novo) {
     int x, p;
     x = pilhaCheia(pilha);
     if(x==1)
@@ -41,8 +41,8 @@ int push(TipoPilha *pilha, TipoItem *novo) {
     else {
         pilha->topo++;
         p = pilha->topo;
-        pilha->itens[p].ra = novo->ra;
-        strcpy(pilha->itens[p].nome, novo->nome);
+        pilha->itens[p].ra = novo.ra;
+        strcpy(pilha->itens[p].nome, novo.nome);
         return 1;
     }
 }
@@ -73,7 +73,7 @@ int main() {
     //inserindo N itens na pilha
     for(i=0; i<N; i++) {
         scanf("%d %s", &item.ra, item.nome);
-        if(!push(&pilha, &item)) {
+        if(!push(&pilha, item)) {
             printf("Pilha cheia.\n");
             break;
         }

@@ -58,6 +58,7 @@ void posOrdem(TipoNo *no){
 }
 
 int search(TipoNo* no, int busca){
+<<<<<<< HEAD
     if(no==NULL) return 0;
 
     if(busca == no->num){
@@ -84,6 +85,25 @@ void imprime(TipoNo* no, int busca){
     else {
         printf("%d ", no->num);
         imprime(no->dir, busca);
+=======
+    if(no==NULL) return -1;
+
+    if(busca == no->num){
+        printf("%d ", no->num);
+        return no->num;
+    }
+    else if(busca < no->num){
+        int resultEsq = search(no->esq, busca);
+        if(resultEsq != -1)
+            printf("%d ", no->num);
+        return resultEsq;
+    }
+    else {
+        int resultDir = search(no->dir, busca);
+        if(resultDir != -1)
+            printf("%d ", no->num);
+        return resultDir;
+>>>>>>> 0950522a0584a470600f626177c60fc4019e2558
     }
 }
 
@@ -131,11 +151,17 @@ int main(){
     posOrdem(arv->raiz);
     printf("\n");
 
+<<<<<<< HEAD
     int p = search(arv->raiz, busca);
     if(p==0)
         printf("-1");
     else
         imprime(arv->raiz, busca);
+=======
+    busca = search(arv->raiz, busca);
+    if(busca==-1)
+        printf("-1");
+>>>>>>> 0950522a0584a470600f626177c60fc4019e2558
     printf("\n");
 
     int altura_atual = 0, altura_maxima = 0;
