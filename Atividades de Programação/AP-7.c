@@ -62,15 +62,19 @@ int search(TipoNo* no, int busca){
 
     if(busca == no->num){
         printf("%d ", no->num);
-        return 0;
+        return no->num;
     }
     else if(busca < no->num){
-        printf("%d ", no->num);
-        search(no->esq, busca);
+        int resultEsq = search(no->esq, busca);
+        if(resultEsq != -1)
+            printf("%d ", no->num);
+        return resultEsq;
     }
     else {
-        printf("%d ", no->num);
-        search(no->dir, busca);
+        int resultDir = search(no->dir, busca);
+        if(resultDir != -1)
+            printf("%d ", no->num);
+        return resultDir;
     }
 }
 
