@@ -1,9 +1,7 @@
-<<<<<<< HEAD
 // seja RAIZ o nó
 
-<raiz sae sad>
+// <raiz sae sad>
 
-=======
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -126,4 +124,3 @@ int main(){
     
     return 0;
 }
->>>>>>> 0950522a0584a470600f626177c60fc4019e2558
