@@ -9,7 +9,7 @@ typedef struct pno
 } pno;
 
 typedef struct
-{
+{ 
     pno *raiz;
 } tree;
 
