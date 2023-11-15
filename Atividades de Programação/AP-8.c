@@ -32,9 +32,9 @@ TipoNo *novoNo(int n, char l)
 
 TipoNo *insert(TipoArv *arv, TipoNo *no, int n, char letra)
 {
-    if(arv->raiz == NULL)
+    if (arv->raiz == NULL)
         arv->raiz = novoNo(n, letra);
-    
+
     if (no == NULL)
         no = novoNo(n, letra);
     else if (n >= no->freq)
@@ -53,19 +53,20 @@ void emOrdem(TipoNo *no)
     emOrdem(no->dir);
 }
 
- TipoNo *substituimenoradireita(TipoNo *p, TipoNo *suc)
- {
-     // Encontra o sucessor de p, ou seja, o descendente mais a esquerda da subárvore da direita de p.
-     // É um nó terminal - seu conteúdo é copiado em q e é removido
-     TipoNo *q;
+TipoNo *substituimenoradireita(TipoNo *p, TipoNo *suc)
+{
+    // Encontra o sucessor de p, ou seja, o descendente mais a esquerda da subárvore da direita de p.
+    // É um nó terminal - seu conteúdo é copiado em q e é removido
+    TipoNo *q;
 
-     if (suc->esq == NULL)
-     {
-         p->letra = suc->letra;
-         // remover sucessor
-         q = suc;
-         suc = suc->dir; // altera p->dir
-         free(q);
+    if (suc->esq == NULL)
+    {
+        p->freq = suc->freq;
+        p->letra = suc->letra;
+        // remover sucessor
+        q = suc;
+        suc = suc->dir; // altera p->dir
+        free(q);
     }
     else
         suc->esq = substituimenoradireita(p, suc->esq);
@@ -79,52 +80,69 @@ TipoNo *removerNo(TipoNo *p)
 { // p é o ponteiro para o nó a ser removido; retorna em p o ponteiro para o nó que o substituiu
     TipoNo *q;
 
+    if (p == NULL)
+    {
+        return NULL;
+    }
+
     if (p->esq == NULL)
     { // substitui por filho à direita
-        q = p;
-        p = p->dir;
-        free(q);
+        q = p->dir;
+        free(p);
+        return q;
     }
 
     else if (p->dir == NULL)
     { // substitui por filho à esquerda
-        q = p;
-        p = p->esq;
-        free(q);
+        q = p->esq;
+        free(p);
+        return q;
     }
 
     else
-        p->dir = substituimenoradireita(p, p->dir);
-    // alternativamente: substituimenoraesquerda(p, p->esq);
-
-    printf("\nteste remove");
-
-    return p;
+    {
+        q = p;
+        TipoNo *r = p->esq;
+        while (r->dir != NULL)
+        {
+            q = r;
+            r = r->dir;
+        }
+        if (q != p)
+        {
+            q->dir = r->esq;
+            r->esq = p->esq;
+        }
+        r->dir = p->dir;
+        free(p);
+        return r;
+    }
 }
 
-bool busca_remove(TipoNo *raiz, int n, char l)
-{ // return true se removeu e false se x não estava na árvore
+TipoNo *busca_remove(TipoNo *raiz, int n, char l)
+{
+    TipoNo *aux;
+
     if (raiz == NULL)
-        return false;
+        return NULL;
+
+    raiz->esq = busca_remove(raiz->esq, n, l);
+
+    raiz->dir = busca_remove(raiz->dir, n, l);
 
     if (raiz->letra == l)
     {
-        removerNo(raiz);
-        return true;
+        aux = removerNo(raiz);
+        return aux;
     }
 
-    if (raiz->freq < n) // buscar e remover na sub-árvore direita
-        return busca_remove(raiz->dir, n, l);
-    else // buscar e remover na sub-árvore esquerda
-        return busca_remove(raiz->esq, n, l);
-
-    printf("\nteste busca");
+    return raiz;
 }
 
 int main()
 {
-    TipoArv *arv = (TipoArv *)malloc(sizeof(TipoArv));
-    inicializaArv(arv);
+    TipoArv arv;
+    inicializaArv(&arv);
 
     char a, b;
     int freqA, freqB;
@@ -143,23 +161,24 @@ int main()
             cont[string[i] - 65]++;
     }
 
-    for (int i = 0; i < 26; i++) {
+    for (int i = 0; i < 26; i++)
+    {
         if (cont[i] > 0)
-            insert(arv, arv->raiz, cont[i], (char)i + 65);
-        if((char)i + 65 == a)
+            insert(&arv, arv.raiz, cont[i], (char)i + 65);
+        if ((char)i + 65 == a)
             freqA = cont[i];
-        if((char)i + 65 == b)
+        if ((char)i + 65 == b)
             freqB = cont[i];
     }
 
     printf("\n");
-    emOrdem(arv->raiz); 
+    emOrdem(arv.raiz);
 
-    busca_remove(arv->raiz, freqA, a);
-    busca_remove(arv->raiz, freqB, b);
+    arv.raiz = busca_remove(arv.raiz, freqA, a);
+    arv.raiz = busca_remove(arv.raiz, freqB, b);
 
     printf("\n");
-    emOrdem(arv->raiz); 
+    emOrdem(arv.raiz);
 
     return 0;
 }
