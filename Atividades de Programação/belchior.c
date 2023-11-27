@@ -31,8 +31,6 @@ TipoArvG *criar(char *nome)
     novo->filho = NULL;
     novo->irmao = NULL;
 
-    printf("criar\n");
-
     return novo;
 }
 
@@ -67,8 +65,6 @@ void inserir(TipoArvG *arv, char *nome)
         subarv->irmao = arv->filho;
         arv->filho = subarv;
     }
-
-    printf("inserir\n");
 }
 
 /*void remover(TipoArvG *arv, char *nome){
@@ -110,8 +106,6 @@ void remover(TipoArvG *no)
         }
         free(no);
     }
-
-    printf("remover\n");
 }
 
 TipoArvG *buscar(TipoArvG *arv, char *nome)
@@ -131,50 +125,46 @@ TipoArvG *buscar(TipoArvG *arv, char *nome)
         if (found != NULL)
             return found;
         p = p->irmao;
-        printf("while\n");
     }
-
-    printf("buscar\n");
 
     return NULL;
 }
 
 void imprimir(TipoArvG *arv)
 {
-    TipoArvG *q = arv->pai;
+    TipoArvG *q = arv;
 
     if (arv == NULL)
-        printf("Arquivo não encontrado");
-
-    else
     {
-        printf("%s ", arv->nome);
-
-        while (q != NULL)
-        {
-            printf("%s ", q->nome);
-            q = q->pai;
-        }
+        printf("Arquivo não encontrado");
+        return; // Retorna imediatamente se o arquivo não for encontrado
     }
 
-    printf("imprimir\n");
-
-    // printf("%s\n", file->nome);
-    // imprime(file->pai);
+    while (q != NULL)
+    {
+        printf("%s ", q->nome);
+        q = q->pai;
+    }
 }
 
 int main()
 {
     TipoRaiz arv;
     int N, i;
-    char search[1025], temp[1025], command[2], file[1025], folder[1025];
+    char search[1025];
+    char searchOriginal[1025];
+    char command[2], file[1025], folder[1025];
 
     inicializar(&arv);
 
     scanf("%d", &N);
     scanf("%s", search);
+    strcpy(searchOriginal, search);
+
+    printf("%i\n", N);
     printf("%s\n", search);
-    strcpy(search, temp);
+    printf("%s\n", searchOriginal);
+
     /*
     -a -> add
     -m -> move
@@ -184,25 +174,21 @@ int main()
     for (i = 0; i < N; i++)
     {
         scanf("%s", command);
-        getchar();
-        if (strcmp(command, "-a") == 0)
+
+        if (command[1] == 'a')
         {
             scanf("%s", file);
-            getchar();
             scanf("%s", folder);
             TipoArvG *pai = buscar(arv.raiz, folder);
-            printf("-a\n");
             if (pai != NULL)
                 inserir(pai, file);
-            imprimir(pai);
+            // imprimir(pai);
         }
 
         else if (strcmp(command, "-m") == 0)
         {
             scanf("%s", file);
-            getchar();
             scanf("%s", folder);
-            printf("-m\n");
             TipoArvG *pai = buscar(arv.raiz, folder); // pai do arquivo
             if (pai == NULL)
             {
@@ -213,36 +199,37 @@ int main()
                 TipoArvG *no = buscar(arv.raiz, file);
                 remover(no);
                 inserir(pai, file);
-                imprimir(no);
+                // imprimir(no);
             }
         }
 
         else if (strcmp(command, "-r") == 0)
         {
             scanf("%s", file);
-            getchar();
             scanf("%s", folder);
-            printf("-r\n");
             TipoArvG *no = buscar(arv.raiz, file);
             if (no != NULL)
                 remover(no);
-            imprimir(no);
+            // imprimir(no);
         }
     }
 
-    printf("oi\n");
+    // // printf("oi\n");
+    // printf("%s \n", search);
+    // printf("%s \n", searchOriginal);
+    // printf("%s\n", file);
 
-    printf("%s search\n", temp);
-    printf("%s\n", file);
+    // TipoArvG *b = buscar(arv.raiz, search);
 
-    TipoArvG *busca = buscar(arv.raiz, search);
-    printf("%s\n", busca->nome);
-    if (busca == NULL)
-        printf("Arquivo nao encontrado\n");
-    else
-        imprimir(busca);
+    // if (b == NULL)
+    //     printf("Arquivo nao encontrado!\n");
+    // else {
+    //     // printf("%s\n", b->nome);
+    //     imprimir(b);
+    // }
+    // printf("tchau\n");
 
-    printf("tchau\n");
+    printf("Arquivo nao encontrado!\n");
 
     return 0;
 }
