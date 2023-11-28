@@ -1,81 +1,173 @@
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 
-typedef struct TipoArvG{
-    char nome[1025];
-    struct TipoArvG *pai;
-    struct TipoArvG *filho;
-    struct TipoArvG *irmao;
-}TipoArvG;
+typedef struct TipoArvG
+{
+    char nome[1024];
+    struct TipoArvG *pai, *filho, *irmao;
+} TipoArvG;
 
-TipoArvG *cria(char *nome){
-    TipoArvG *novo = (TipoArvG *) malloc(sizeof(TipoArvG));
+typedef struct TipoRaiz
+{
+    TipoArvG *raiz;
+} TipoRaiz;
+
+TipoArvG *criar(char *nome)
+{
+    TipoArvG *novo = (TipoArvG *)malloc(sizeof(TipoArvG));
 
     strcpy(novo->nome, nome);
     novo->pai = NULL;
     novo->filho = NULL;
     novo->irmao = NULL;
+
     return novo;
 }
 
-//Insere uma subárvore como primeiro filho
-//Inserção no início da lista
-void insere(TipoArvG *arv, char *nome){
-    TipoArvG *subarv = cria(nome);
-
-    subarv->irmao = arv->filho;
-    arv->filho    = subarv;
-    subarv->pai = arv;
+void inicializar(TipoRaiz *arv)
+{
+    arv->raiz = criar("\\root");
 }
 
-// Impressão em pré-ordem
-TipoArvG *busca(TipoArvG *arv, char *nome){
+void inserir(TipoArvG *arv, char *nome)
+{
+    TipoArvG *subarv = criar(nome);
+
+    if (arv->filho == NULL)
+    {
+        subarv->irmao = NULL;
+        subarv->pai = arv;
+        arv->filho = subarv;
+    }
+    else
+    {
+        subarv->pai = arv;
+        subarv->irmao = arv->filho;
+        arv->filho = subarv;
+    }
+}
+
+void remover(TipoArvG *no)
+{
+    TipoArvG *p = no->pai;
+    TipoArvG *q = p->filho;
+
+    if (p != NULL)
+    {
+        if (p->filho == no)
+            p->filho = no->irmao;
+        else
+        {
+            while (q->irmao != no)
+                q = q->irmao;
+            q->irmao = no->irmao;
+        }
+        free(no);
+    }
+}
+
+TipoArvG *buscar(TipoArvG *arv, char *nome)
+{
     TipoArvG *p = arv->filho;
+    TipoArvG *found = NULL;
 
-    if(p->nome == nome)
-        return p;
+    if (arv == NULL)
+        return NULL;
 
-    while(p!=NULL){
-        imprimePre(p);
-        p=p->irmao;
+    if (strcmp(arv->nome, nome) == 0)
+        return arv;
+
+    while (p != NULL)
+    {
+        found = buscar(p, nome);
+        if (found != NULL)
+            return found;
+        p = p->irmao;
+    }
+
+    return NULL;
+}
+
+void imprimir(TipoArvG *arv)
+{
+    TipoArvG *q = arv;
+
+    if (arv == NULL)
+    {
+        printf("Arquivo não encontrado");
+        return; // Retorna imediatamente se o arquivo não for encontrado
+    }
+
+    while (q != NULL)
+    {
+        printf("%s ", q->nome);
+        q = q->pai;
     }
 }
 
-// Liberar memória
-// Remover primeiro as folhas
-void libera(TipoArvG *arv){ 
-    TipoArvG *p=arv->filho;
-    while(p!=NULL){
-        TipoArvG *aux=p->irmao;
-        libera(p);
-        p=aux;
-    }
-    free(arv);
-}
-
-// verificação para buscar o pai ou arquivo e retornar NULL, não faz nada
-
-int main() {
-    TipoArvG *arv;
-
-    //strcpy(arv.nome, "/root");
-
-    arv = cria("\\root");
-
+int main()
+{
+    TipoRaiz arv;
     int N, i;
-    do {
-        scanf("%d", &N);
-    } while(N<1 || N>1024);
+    char search[1025];
+    char command[3], file[1025], folder[1025];
 
-    char nome[1025];
-    for(i=0; i<N; i++) {
-        scanf("%s", nome);
-        insere(arv, nome);
+    inicializar(&arv);
+
+    scanf("%d", &N);
+    scanf("%s", search);
+    /*
+    -a -> add
+    -m -> move
+    -r -> remove
+    */
+    for (i = 0; i < N; i++)
+    {
+        scanf("%s", command);
+
+        if (command[1] == 'a')
+        {
+            scanf("%s", file);
+            scanf("%s", folder);
+            TipoArvG *pai = buscar(arv.raiz, folder);
+            if (pai != NULL)
+                inserir(pai, file);
+        }
+
+        else if (command[1] == 'm')
+        {
+            scanf("%s", file);
+            scanf("%s", folder);
+            TipoArvG *pai = buscar(arv.raiz, folder); // pai do arquivo
+            if (pai == NULL)
+            {
+                // printf("Pai nao encontrado\n");
+            }
+            else
+            {
+                TipoArvG *no = buscar(arv.raiz, file);
+                inserir(pai, file);
+                remover(no);
+            }
+        }
+
+        else if (command[1] == 'r')
+        {
+            scanf("%s", file);
+            TipoArvG *no = buscar(arv.raiz, file);
+            if (no != NULL)
+                remover(no);
+        }
     }
 
-    imprimePre(arv);
-    libera(arv);
+     TipoArvG *b = buscar(arv.raiz, search);
+
+     if (b == NULL)
+         printf("Arquivo nao encontrado!\n");
+     else {
+         imprimir(b);
+     }
 
     return 0;
 }
